@@ -1,5 +1,5 @@
 #include "mergeSort.h"
-#include "assert.h"
+#include <thread>
 
 Node* mergeList_old(Node* left, Node* right) {
 	if (left == nullptr) return right;
@@ -57,9 +57,46 @@ Node* mergeSort(Node* list, int n) {
 	middle->next = nullptr;
 
 	int leftn = n / 2;
-	Node* left = mergeSort(list, int(n / 2));
+	Node* left = mergeSort(list, leftn);
 	int rightn = n - leftn;
-	Node* right = mergeSort(second, n - int(n / 2));
+	Node* right = mergeSort(second, rightn);
 
-	return mergeList(left, right);
+	Node* result = mergeList(left, right);
+	return result;
+}
+
+int test(int n, int m) {
+	std::thread subThread(test, 5, m);
+	return n + m;
+}
+
+void multiThreadMergeSort(Node** list, int n, int depth) {
+	if (n < 2) return;
+
+	Node* middle = *list;
+	for (int i = 0; i < int(n / 2) - 1; i++) {
+		middle = middle->next;
+	}
+
+	Node* second = middle->next;
+	middle->next = nullptr;
+
+	int leftn = n / 2;
+	int rightn = n - leftn;
+	Node* left,* right;
+	if (depth > 1) {
+		left = *list;
+		right = second;
+		std::thread subThread(multiThreadMergeSort, &left, leftn, depth - 1);
+		multiThreadMergeSort(&right, rightn, depth - 1);
+
+		subThread.join();
+	}
+	else {
+		left = mergeSort(*list, leftn);
+		right = mergeSort(second, rightn);
+	}
+	
+
+	*list = mergeList(left, right);
 }
