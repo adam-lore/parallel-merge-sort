@@ -5,20 +5,34 @@
 #include <stdlib.h>
 #include "linkedList.h"
 #include "mergeSort.h"
+#include <thread>
+#include <chrono>
 
 int main() {
     Node* list = new Node();
     list->value = 0;
 
-    for (int i = 1; i < 20; i++) {
+    srand(time(NULL));
+
+    for (int i = 1; i < 1000; i++) {
         Node* next = new Node();
         next->value = rand() % 101;
         list = insertFirst(list, next);
     }
 
-    printList(list);
+    //printList(list);
 
-    list = mergeSort(list, 20);
+    auto start = std::chrono::high_resolution_clock::now();
 
-    printList(list);
+    std::thread t1(multiThreadMergeSort, &list, 10000, 3);
+    t1.join();
+
+    //list = mergeSort(list, 1000);
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    const std::chrono::duration<double, std::milli> time = end - start;
+
+    //printList(list);
+    std::cout << time.count() << "\n";
 }
