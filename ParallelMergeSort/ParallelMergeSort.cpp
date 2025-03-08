@@ -9,16 +9,14 @@
 int main() {
     Node* list = new Node();
     list->value = 0;
+    int n = 22; //Element count.
 
-    for (int i = 1; i < 20; i++) {
+    for (int i = 1; i < n; i++) {
         Node* next = new Node();
         next->value = rand() % 101;
         list = insertFirst(list, next);
     }
-
     printList(list);
-
-    list = mergeSort(list, 20);
-
+    list = mergeSort(list, n);
     printList(list);
 }
