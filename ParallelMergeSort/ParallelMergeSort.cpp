@@ -11,7 +11,7 @@
 int main() {
     Node* list = new Node();
     list->value = 0;
-    int n = 1000000000; //Element count.
+    int n = 100000000; //Element count.
 
     srand(time(NULL));
 
@@ -28,7 +28,7 @@ int main() {
     printf("starting\n");
     auto start = std::chrono::high_resolution_clock::now();
 
-    std::thread t1(multiThreadMergeSort, &list, n, 1);
+    std::thread t1(multiThreadMergeSort, &list, n, 3);
     t1.join();
 
     //list = mergeSort(list, 1000);
