@@ -32,17 +32,16 @@ Node* mergeList(Node* left, Node* right) {
 		}
 	}
 	//only one of the lists have elements, they are sorted, just fill into new list
-	while (left != nullptr) {					 //Process left tree
+	if (left != nullptr) {					 //Process left tree
 		current->next = left;
-		current = left;
-		left = left->next;
 	}
-	while (right != nullptr) {
+	else {
 		current->next = right;
-		current = right;
-		right = right->next;
 	}
-	return head->next;
+
+	current = head->next; //Store merged list
+	delete head;          //Free memory
+	return current;
 }
 
 Node* mergeSort(Node* list, int n) {
