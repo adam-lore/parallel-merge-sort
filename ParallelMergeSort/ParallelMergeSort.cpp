@@ -8,10 +8,19 @@
 #include <thread>
 #include <chrono>
 
+void printIfSorted(Node* list, int n) {
+    if (isSorted(list, n)) {
+        std::cout << "List is sorted :)\n";
+    }
+    else {
+        std::cout << "List is not sorted >:(\n";
+    }
+}
+
 int main() {
     Node* list = new Node();
     list->value = 0;
-    int n = 1000000000; //Element count.
+    int n = 10000000; //Element count.
 
     srand(time(NULL));
 
@@ -21,6 +30,7 @@ int main() {
         list = insertFirst(list, next);
     }
 
+    printIfSorted(list, n);
     //printList(list);
     //list = mergeSort(list, n);
     //printList(list);
@@ -37,6 +47,7 @@ int main() {
 
     const std::chrono::duration<double, std::milli> time = end - start;
 
+    printIfSorted(list, n);
     //printList(list);
     std::cout << time.count() << "\n";
 }
