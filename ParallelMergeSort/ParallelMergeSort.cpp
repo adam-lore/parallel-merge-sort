@@ -18,15 +18,17 @@ void printIfSorted(Node* list, int n) {
 }
 
 int main() {
-    Node* list = new Node();
-    list->value = 0;
-    int n = 10000000; //Element count.
+    int n = 10000000;   //Element count.
+    int valRange = 100; //Numbers will range from 0 < - > valRange
 
     srand(time(NULL));
 
+    Node* list = new Node();
+    list->value = rand() % (valRange + 1);
+
     for (int i = 1; i < n; i++) {
         Node* next = new Node();
-        next->value = rand() % 101;
+        next->value = rand() % (valRange + 1);
         list = insertFirst(list, next);
     }
 
