@@ -64,11 +64,6 @@ Node* mergeSort(Node* list, int n) {
 	return result;
 }
 
-int test(int n, int m) {
-	std::thread subThread(test, 5, m);
-	return n + m;
-}
-
 void multiThreadMergeSort(Node** list, int n, int depth) {
 	if (n < 2) return;
 
@@ -83,7 +78,7 @@ void multiThreadMergeSort(Node** list, int n, int depth) {
 	int leftn = n / 2;
 	int rightn = n - leftn;
 	Node* left,* right;
-	if (depth > 1) {
+	if (depth > 0) {
 		left = *list;
 		right = second;
 		std::thread subThread(multiThreadMergeSort, &left, leftn, depth - 1);

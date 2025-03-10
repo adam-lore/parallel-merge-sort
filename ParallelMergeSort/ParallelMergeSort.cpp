@@ -36,19 +36,19 @@ void runTests() {
     int valRange = 100;
     long long total = 0;
     int nAttempts = 10;
-    int numThreads = 1;
+    int maxThreadDepth = 5; //Number of threads = 2^threadDepth
     int elementSize = 100;
     int seed = 1337; 
     srand(1337); //Random seed decide on value later
 
     for (nItems = 10; nItems <= 100000; nItems *= 10) {
-        for (int numThreads = 1; numThreads < 16; numThreads *= 2) {
-          //  fprintf(fp, "Test started with %d threads and %d elements!\n", numThreads, nItems);
+        for (int threadDepth = 0; threadDepth <= maxThreadDepth; threadDepth++) {
+          //  fprintf(fp, "Test started with %d threads and %d elements!\n", threadDepth, nItems);
             total = 0;
             for (int i = 0; i < nAttempts; i++) {
                 list = generateList(nItems, seed, elementSize);                         //Generate this rounds list
                 auto start = std::chrono::high_resolution_clock::now();
-                multiThreadMergeSort(&list, nItems, numThreads);
+                multiThreadMergeSort(&list, nItems, threadDepth);
                 auto end = std::chrono::high_resolution_clock::now();
                 if (!isSorted) {                                                        //Makeshift "error handling"
                     fprintf(fp, "Error, lists do not match!!!\n"); 
@@ -58,12 +58,12 @@ void runTests() {
                     return; 
                 }
             //    fprintf(fp, "attempt = %d\ttime = %lld\n", i + 1, (end - start).count());
-                fprintf(fp, "%d,%d,%d,%lld\n", numThreads, nItems, i+1, (end - start).count());
+                fprintf(fp, "%d,%d,%d,%lld\n", int(pow(2, threadDepth)), nItems, i+1, (end - start).count());
                 total += (end - start).count();
                 list = freeList(list);                                                 //free for next iteration
             }
             
-            fprintf(fp, "%d,%d,Average,%lld\n",numThreads, nItems, total / nAttempts);
+            fprintf(fp, "%d,%d,Average,%lld\n", int(pow(2, threadDepth)), nItems, total / nAttempts);
         }
     }
     fclose(fp);
