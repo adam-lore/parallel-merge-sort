@@ -5,6 +5,27 @@ Node* insertFirst(Node* list, Node* node){
 	(*node).next = list;
 	return node;
 }
+Node* generateList(int nItems, int seed, int elementSize) {
+	srand(seed); //Temp seed
+	Node* list = new Node();
+	list->value = rand() % elementSize;
+	for (int i = 0; i < nItems - 1; i++) {
+		Node* listNode = new Node();
+		listNode->value = rand() % elementSize;
+		list = insertFirst(list, listNode);
+	}
+	return list;
+}
+
+Node* freeList(Node* list) {
+	Node* cursor = list;
+	while (cursor) {
+		cursor = cursor->next;
+		delete list;
+		list = cursor;
+	}
+	return nullptr;
+}
 
 Node* insertLast(Node* list, Node* node) {
 	Node* current = list;

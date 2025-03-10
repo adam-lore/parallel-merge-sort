@@ -29,28 +29,6 @@ Node* copyList(Node* original, Node* target) {
     return head;
 }
 
-Node* generateList(int nItems, int seed, int elementSize) {
-    srand(seed); //Temp seed
-    Node* list = new Node();
-    list->value = rand() % elementSize;
-    for (int i = 0; i < nItems - 1; i++) {
-        Node* listNode = new Node();
-        listNode->value = rand() % elementSize;
-        list = insertFirst(list, listNode);
-    }
-    return list;
-}
-
-Node* freeList(Node* list) {
-    Node* cursor = list;
-    while (cursor) {
-        cursor = cursor->next;
-        delete list;
-        list = cursor;
-    }
-    return nullptr;
-}
-
 void runTests() {
     FILE* fp = fopen("results.txt", "w");
     Node* list = new Node();
@@ -63,7 +41,7 @@ void runTests() {
     int seed = 1337; 
     srand(1337); //Random seed decide on value later
 
-    for (nItems = 10; nItems <= 10000000; nItems *= 10) {
+    for (nItems = 10; nItems <= 100000; nItems *= 10) {
         for (int numThreads = 1; numThreads < 16; numThreads *= 2) {
           //  fprintf(fp, "Test started with %d threads and %d elements!\n", numThreads, nItems);
             for (int i = 0; i < nAttempts; i++) {
