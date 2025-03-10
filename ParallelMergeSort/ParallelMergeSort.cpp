@@ -44,6 +44,7 @@ void runTests() {
     for (nItems = 10; nItems <= 100000; nItems *= 10) {
         for (int numThreads = 1; numThreads < 16; numThreads *= 2) {
           //  fprintf(fp, "Test started with %d threads and %d elements!\n", numThreads, nItems);
+            total = 0;
             for (int i = 0; i < nAttempts; i++) {
                 list = generateList(nItems, seed, elementSize);                         //Generate this rounds list
                 auto start = std::chrono::high_resolution_clock::now();
@@ -61,13 +62,13 @@ void runTests() {
                 total += (end - start).count();
                 list = freeList(list);                                                 //free for next iteration
             }
+            
             fprintf(fp, "%d,%d,Average,%lld\n",numThreads, nItems, total / nAttempts);
         }
     }
     fclose(fp);
     printf("Tests complete!");
 }
-
 
 
 int main() {
