@@ -32,16 +32,16 @@ Node* copyList(Node* original, Node* target) {
 void runTests() {
     FILE* fp = fopen("results.txt", "w");
     Node* list = new Node();
-    int nItems = 10;
+    int maxItems = 20;      //Maximum number of items = 2^maxItems
     int valRange = 100;
     long long total = 0;
     int nAttempts = 10;
-    int maxThreadDepth = 5; //Number of threads = 2^threadDepth
+    int maxThreadDepth = 3; //Number of threads = 2^threadDepth
     int elementSize = 100;
     int seed = 1337; 
     srand(1337); //Random seed decide on value later
 
-    for (nItems = 10; nItems <= 100000; nItems *= 10) {
+    for (int nItems = pow(2, 4); nItems <= pow(2, maxItems); nItems *= 2) {
         for (int threadDepth = 0; threadDepth <= maxThreadDepth; threadDepth++) {
           //  fprintf(fp, "Test started with %d threads and %d elements!\n", threadDepth, nItems);
             total = 0;
