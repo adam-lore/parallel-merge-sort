@@ -33,20 +33,19 @@ void runTests() {
     FILE* fp = fopen("results.txt", "w");
     Node* list = new Node();
     int maxItems = 20;      //Maximum number of items = 2^maxItems
-    int valRange = 100;
-    long long total = 0;
+    long long total;
     int nAttempts = 10;
-    int maxThreadDepth = 3; //Number of threads = 2^threadDepth
-    int elementSize = 100;
-    int seed = 1337; 
-    srand(1337); //Random seed decide on value later
+    int maxThreadDepth = 0; //Number of threads = 2^threadDepth
+    int elementRange = 100;
+    int seed = 1337;
 
     for (int nItems = pow(2, 4); nItems <= pow(2, maxItems); nItems *= 2) {
         for (int threadDepth = 0; threadDepth <= maxThreadDepth; threadDepth++) {
           //  fprintf(fp, "Test started with %d threads and %d elements!\n", threadDepth, nItems);
             total = 0;
+            srand(1337);
             for (int i = 0; i < nAttempts; i++) {
-                list = generateList(nItems, seed, elementSize);                         //Generate this rounds list
+                list = generateList(nItems, elementRange);                        //Generate this rounds list
                 auto start = std::chrono::high_resolution_clock::now();
                 multiThreadMergeSort(&list, nItems, threadDepth);
                 auto end = std::chrono::high_resolution_clock::now();
@@ -60,7 +59,7 @@ void runTests() {
             //    fprintf(fp, "attempt = %d\ttime = %lld\n", i + 1, (end - start).count());
                 fprintf(fp, "%d,%d,%d,%lld\n", int(pow(2, threadDepth)), nItems, i+1, (end - start).count());
                 total += (end - start).count();
-                list = freeList(list);                                                 //free for next iteration
+                list = freeList(list);                                                  //free for next iteration
             }
             
             fprintf(fp, "%d,%d,Average,%lld\n", int(pow(2, threadDepth)), nItems, total / nAttempts);

@@ -13,6 +13,6 @@ bool isSorted(Node* list, int n);
 
 void printList(Node* list);
 
-Node* generateList(int nItems, int seed, int elementSize);
+Node* generateList(int nItems, int elementSize);
 
 Node* freeList(Node* list);

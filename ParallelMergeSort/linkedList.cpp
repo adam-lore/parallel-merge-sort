@@ -5,8 +5,7 @@ Node* insertFirst(Node* list, Node* node){
 	(*node).next = list;
 	return node;
 }
-Node* generateList(int nItems, int seed, int elementSize) {
-	srand(seed); //Temp seed
+Node* generateList(int nItems, int elementSize) {
 	Node* list = new Node();
 	list->value = rand() % elementSize;
 	for (int i = 0; i < nItems - 1; i++) {
