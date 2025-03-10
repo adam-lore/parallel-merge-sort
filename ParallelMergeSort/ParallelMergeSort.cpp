@@ -29,44 +29,65 @@ Node* copyList(Node* original, Node* target) {
     return head;
 }
 
+Node* generateList(int nItems, int seed, int elementSize) {
+    srand(seed); //Temp seed
+    Node* list = new Node();
+    list->value = rand() % elementSize;
+    for (int i = 0; i < nItems - 1; i++) {
+        Node* listNode = new Node();
+        listNode->value = rand() % elementSize;
+        list = insertFirst(list, listNode);
+    }
+    return list;
+}
+
+Node* freeList(Node* list) {
+    Node* cursor = list;
+    while (cursor) {
+        cursor = cursor->next;
+        delete list;
+        list = cursor;
+    }
+    return nullptr;
+}
+
 void runTests() {
     FILE* fp = fopen("results.txt", "w");
-    Node* original = new Node();
     Node* list = new Node();
     int nItems = 10;
     int valRange = 100;
     long long total = 0;
     int nAttempts = 10;
     int numThreads = 1;
+    int elementSize = 100;
+    int seed = 1337; 
     srand(1337); //Random seed decide on value later
-    original->value = rand() % valRange;
-    list->value = original->value;
-    for (nItems = 10; nItems <= 1000000; nItems *= 10) {
-        for (int i = 0; i < nItems - 1; i++) {
-            Node* listNode = new Node();
-            Node* originalNode = new Node();
-            listNode->value = rand() % (valRange + 1);
-            originalNode->value = listNode->value;
-            list = insertFirst(list, listNode);
-            original = insertFirst(original, originalNode);
-        }
+
+    for (nItems = 10; nItems <= 10000000; nItems *= 10) {
         for (int numThreads = 1; numThreads < 16; numThreads *= 2) {
-            fprintf(fp, "Test started with %d threads and %d elements!\n", numThreads, nItems);
+          //  fprintf(fp, "Test started with %d threads and %d elements!\n", numThreads, nItems);
             for (int i = 0; i < nAttempts; i++) {
+                list = generateList(nItems, seed, elementSize);                         //Generate this rounds list
                 auto start = std::chrono::high_resolution_clock::now();
                 multiThreadMergeSort(&list, nItems, numThreads);
                 auto end = std::chrono::high_resolution_clock::now();
-                bool verified = isSorted(list, nItems);
-                fprintf(fp, "attempt = %d\ttime = %lld\n", i + 1, (end - start).count());
+                if (!isSorted) {                                                        //Makeshift "error handling"
+                    fprintf(fp, "Error, lists do not match!!!\n"); 
+                    printf("Error, lists do not match!!!\n");
+                    fclose(fp);
+                    list = freeList(list);
+                    return; 
+                }
+            //    fprintf(fp, "attempt = %d\ttime = %lld\n", i + 1, (end - start).count());
+                fprintf(fp, "%d,%d,%d,%lld\n", numThreads, nItems, i+1, (end - start).count());
                 total += (end - start).count();
-                list = copyList(original, list);
+                list = freeList(list);                                                 //free for next iteration
             }
-            fprintf(fp, "nItems = %d  -> Average time = %lld\n\n", nItems, total / nAttempts);
+            fprintf(fp, "%d,%d,Average,%lld\n",numThreads, nItems, total / nAttempts);
         }
-        
     }
     fclose(fp);
-
+    printf("Tests complete!");
 }
 
 
