@@ -32,23 +32,23 @@ Node* copyList(Node* original, Node* target) {
 void runTests() {
     FILE* fp = fopen("results.txt", "w");
     Node* list = new Node();
-    int maxItems = 20;      //Maximum number of items = 2^maxItems
+    int maxItems = 14;      //Maximum number of items = 2^maxItems
     long long total;
     int nAttempts = 10;
-    int maxThreadDepth = 0; //Number of threads = 2^threadDepth
+    int maxThreadDepth = 6; //Number of threads = 2^threadDepth
     int elementRange = 100;
     int seed = 1337;
 
-    for (int nItems = pow(2, 4); nItems <= pow(2, maxItems); nItems *= 2) {
+    for (int nItems = pow(2, 10); nItems <= pow(2, maxItems); nItems *= 2) {
         for (int threadDepth = 0; threadDepth <= maxThreadDepth; threadDepth++) {
           //  fprintf(fp, "Test started with %d threads and %d elements!\n", threadDepth, nItems);
             total = 0;
             srand(1337);
             for (int i = 0; i < nAttempts; i++) {
                 list = generateList(nItems, elementRange);                        //Generate this rounds list
-                auto start = std::chrono::high_resolution_clock::now();
+                auto start = std::chrono::steady_clock::now();
                 multiThreadMergeSort(&list, nItems, threadDepth);
-                auto end = std::chrono::high_resolution_clock::now();
+                auto end = std::chrono::steady_clock::now();
                 if (!isSorted) {                                                        //Makeshift "error handling"
                     fprintf(fp, "Error, lists do not match!!!\n"); 
                     printf("Error, lists do not match!!!\n");
@@ -92,14 +92,14 @@ int main() {
     //printList(list);
     //return(0);
     printf("starting\n");
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::steady_clock::now();
 
     std::thread t1(multiThreadMergeSort, &list, n, 1);
     t1.join();
 
     //list = mergeSort(list, 1000);
 
-    auto end = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::steady_clock::now();
 
     const std::chrono::duration<double, std::milli> time = end - start;
 
